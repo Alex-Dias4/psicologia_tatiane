@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Histórico de {{ paciente.usuario.nome }}{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/public/dashboard_shared.css' %}">
+    <style>
+        .historico-container { max-width: 900px; margin: 2rem auto; }
+        .paciente-info-card { 
+            background-color: #f8f9fa; 
+            padding: 1.5rem; 
+            border-radius: 8px; 
+            margin-bottom: 2rem; 
+            border: 1px solid #eee;
+        }
+        .paciente-info-card h2 { 
+            font-size: 1.3rem; 
+            margin-bottom: 1rem; 
+            border-bottom: 1px solid #ddd; 
+            padding-bottom: 0.5rem;
+        }
+        .info-grid { 
+            display: grid; 
+            grid-template-columns: 150px 1fr; 
+            gap: 0.5rem 1rem; 
+            font-size: 0.95rem;
+        }
+        .info-grid strong { color: #555; }
+
+        .consultas-list-wrapper {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .consultas-list-wrapper h2 {
+             font-size: 1.5rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; margin-bottom: 1rem;
+        }
+        
+        .consulta-item { 
+            padding: 1rem 0; 
+            border-bottom: 1px solid #eee; 
+        }
+        .consulta-item:last-child { border-bottom: none; padding-bottom: 0;}
+
+        .consulta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .consulta-date-time { font-weight: 600; font-size: 1.1rem; color: #333;}
+        .consulta-status { padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; text-align: center; font-weight: 500;}
+        /* Copie as cores .status-* do CSS da agenda aqui se não estiverem no shared */
+        .status-confirmada { background-color: #d4edda; color: #155724; }
+        .status-pendente { background-color: #fff3cd; color: #856404; }
+        .status-realizada { background-color: #d1ecf1; color: #0c5460; }
+        .status-cancelada { background-color: #f8d7da; color: #721c24; }
+        .status-aguardando_remarcacao { background-color: #ffc107; color: #333; }
+        
+        .consulta-details p { margin: 0.5rem 0; font-size: 0.9rem; color: #555; }
+        .consulta-details strong { color: #333; }
+        
+        .diagnosticos-list { list-style: circle inside; padding-left: 0; margin-top: 0.8rem; font-size: 0.9rem; }
+        .diagnosticos-list li { margin-bottom: 0.3rem; }
+
+        /* Paginação (Se for usar) */
+        .pagination { display: flex; justify-content: center; margin-top: 2rem; }
+        /* ... (Cole o CSS da paginação aqui, se for usar e não estiver no shared) ... */
+         .pagination a, .pagination span { padding: 0.6rem 1.1rem; margin: 0 0.3rem; border: 1px solid #ddd; text-decoration: none; color: #3498db; border-radius: 6px; transition: all 0.2s ease; }
+        .pagination a:hover { background-color: #f0f8ff; border-color: #aed9f5; }
+        .pagination .current { background-color: #3498db; color: white; border-color: #3498db; font-weight: bold; }
+        .pagination .disabled { color: #ccc; border-color: #eee; cursor: default; }
+        .pagination .disabled:hover { background-color: transparent; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container historico-container">
+    <div class="dashboard-header" style="margin-bottom: 1.5rem;">
+        <h1>Histórico do Paciente</h1>
+    </div>
+
+    <div class="paciente-info-card">
+        <h2>{{ paciente.usuario.nome }}</h2>
+        <div class="info-grid">
+            <strong>CPF:</strong> <span>{{ paciente.usuario.cpf }}</span> <strong>Email:</strong> <span>{{ paciente.usuario.email }}</span>
+            <strong>Idade:</strong> <span>{{ paciente.usuario.idade|default:"N/A" }}</span>
+            <strong>Telefone(s):</strong> 
+            <span>
+                {% for tel in paciente.usuario.telefones.all %}
+                    {{ tel.telefone }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    Não informado
+                {% endfor %}
+            </span>
+            <strong>Endereço:</strong> 
+            <span>
+                {{ paciente.usuario.rua|default:"" }}{% if paciente.usuario.numero %}, {{ paciente.usuario.numero }}{% endif %}. 
+                {{ paciente.usuario.bairro|default:"" }}. {{ paciente.usuario.cidade|default:"" }}.
+            </span>
+            <strong>Plano Saúde:</strong> <span>{{ paciente.plano_saude|default:"N/A" }}</span>
+            <strong>Responsável:</strong> <span>{{ paciente.responsavel|default:"N/A" }}</span>
+        </div>
+    </div>
+
+    <div class="consultas-list-wrapper">
+        <h2>Histórico de Consultas</h2>
+
+        {% for consulta in consultas %} 
+            <div class="consulta-item">
+                <div class="consulta-header">
+                    <span class="consulta-date-time">{{ consulta.data|date:"d/m/Y" }} - {{ consulta.hora|time:"H:i" }}</span>
+                    <span class="consulta-status status-{{ consulta.status }}">{{ consulta.get_status_display }}</span>
+                </div>
+                <div class="consulta-details">
+                    {% if consulta.observacao %}
+                        <p><strong>Observações:</strong> {{ consulta.observacao|truncatewords:20|linebreaksbr }}</p>
+                    {% endif %}
+                    {% if consulta.diagnosticos.all %}
+                        <p><strong>Diagnósticos:</strong></p>
+                        <ul class="diagnosticos-list">
+                            {% for diag in consulta.diagnosticos.all %}
+                                <li><strong>{{ diag.cid10|default:"S/ CID" }}:</strong> {{ diag.descricao }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                     <a href="{% url 'psicologo:consulta_detalhes' consulta.id_consulta %}" style="font-size: 0.85rem; margin-top: 0.5rem; display: inline-block;">Ver Detalhes/Ações</a>
+                </div>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #7f8c8d; padding: 2rem;">Nenhuma consulta registrada para este paciente com você.</p>
+        {% endfor %}
+    </div> </div>
+{% endblock %}

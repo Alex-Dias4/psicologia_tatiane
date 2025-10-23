@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meu Perfil{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/public/dashboard_shared.css' %}">
+    <style>
+        .perfil-container { 
+            max-width: 800px; 
+            margin: 2rem auto; 
+            display: grid; /* Mantém o grid */
+            /* Colunas: Foto (largura fixa), Conteúdo (ocupa o resto) */
+            grid-template-columns: 200px 1fr; 
+            gap: 1.5rem 2.5rem; /* Aumenta o espaço entre colunas */
+            align-items: start; 
+        }
+        
+        .perfil-sidebar { 
+            text-align: center; 
+            /* Garante que o conteúdo não ultrapasse a coluna */
+            overflow: hidden; 
+        }
+        
+        .perfil-foto { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            margin-bottom: 1.5rem; /* Mais espaço abaixo da foto */
+            border: 3px solid #eee; 
+            display: block; /* Garante margem automática */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Estilo para o form da foto simplificado */
+        .foto-form label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: 500; 
+            font-size: 0.9rem;
+            color: #555;
+        }
+        /* Estiliza o input de arquivo para parecer um botão */
+        .foto-form input[type="file"] {
+            display: block;
+            width: 100%; /* Ocupa a largura da sidebar */
+            margin-bottom: 1rem;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-sizing: border-box; /* Inclui padding na largura */
+        }
+        .foto-form input[type="file"]::file-selector-button {
+            /* Estilo do botão interno (pode variar entre navegadores) */
+            padding: 5px 10px;
+            border: none;
+            background-color: #6c757d;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .foto-form button { 
+            padding: 0.6rem 1.2rem; 
+            background-color: #5cb85c; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 0.9rem;
+            width: 100%; /* Botão ocupa a largura */
+        }
+        .form-errors { 
+            font-size: 0.8rem; color: #d93025; list-style: none; padding: 0; margin: -5px 0 5px 0; text-align: left; 
+        }
+
+
+        /* Coluna principal (sem alterações necessárias aqui) */
+        .perfil-main { /* Conteúdo principal fica na segunda coluna */ }
+        .info-section { margin-bottom: 2rem; }
+        .info-section h2 { font-size: 1.5rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        .info-grid { display: grid; grid-template-columns: 180px 1fr; gap: 0.8rem 1rem; align-items: center; }
+        .info-grid strong { color: #555; font-weight: 600; }
+        .info-grid span { color: #333; word-break: break-word; } /* Adicionado word-break */
+        .edit-button-section { text-align: right; margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem; }
+        .btn-edit { padding: 0.7rem 1.5rem; background-color: #3498db; color: white; text-decoration: none; border-radius: 6px; transition: background-color 0.2s ease; }
+        .btn-edit:hover { background-color: #2980b9; }
+
+        @media (max-width: 768px) {
+            .perfil-container { grid-template-columns: 1fr; } 
+            .perfil-sidebar { margin-bottom: 2rem; }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container perfil-container dashboard-card">
+
+    <div class="perfil-sidebar">
+        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de Perfil de {{ usuario.nome }}" class="perfil-foto">
+        
+        <form method="POST" enctype="multipart/form-data" class="foto-form">
+            {% csrf_token %}
+            
+            <label for="{{ foto_form.foto_perfil.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">Alterar Foto:</label>
+            {{ foto_form.foto_perfil }} 
+            {% if foto_form.foto_perfil.errors %}
+                <div class="form-errors">{{ foto_form.foto_perfil.errors|striptags }}</div>
+            {% endif %}
+
+            <button type="submit" name="submit_foto">Salvar Foto</button> 
+        </form>
+    </div>
+
+    <div class="perfil-main">
+        <div class="dashboard-header" style="margin-bottom: 2rem;">
+            <h1>Meu Perfil</h1>
+        </div>
+
+        <div class="info-section">
+            <h2>Dados Pessoais</h2>
+            
+            <div class="info-grid">
+                <strong>Nome Completo:</strong> <span>{{ usuario.nome }}</span>
+                <strong>Email:</strong> <span>{{ usuario.email }}</span>
+                <strong>CPF:</strong> <span>{{ usuario.cpf }}</span> <strong>Idade:</strong> <span>{{ usuario.idade|default:"Não informada" }}</span>
+            </div>
+            </div>
+
+        <div class="info-section">
+            <h2>Endereço</h2>
+            
+            <div class="info-grid">
+                <strong>Rua/Avenida:</strong> <span>{{ usuario.rua|default:"Não informado" }}</span>
+                <strong>Número:</strong> <span>{{ usuario.numero|default:"N/A" }}</span>
+                <strong>Bairro:</strong> <span>{{ usuario.bairro|default:"Não informado" }}</span>
+                <strong>Cidade:</strong> <span>{{ usuario.cidade|default:"Não informada" }}</span>
+                <strong>CEP:</strong> <span>{{ usuario.cep|default:"Não informado" }}</span>
+            </div>
+            </div>
+
+        {% if psicologo %}
+            <div class="info-section">
+                <h2>Dados Profissionais (Psicólogo)</h2>
+                
+                <div class="info-grid">
+                    <strong>CRP:</strong> <span>{{ psicologo.crp }}</span>
+                    <strong>Especialidade:</strong> <span>{{ psicologo.especialidade|default:"Não informada" }}</span>
+                </div>
+                </div>
+        {% elif paciente %}
+            <div class="info-section">
+                <h2>Dados Adicionais (Paciente)</h2>
+                
+                <div class="info-grid">
+                    <strong>Responsável:</strong> <span>{{ paciente.responsavel|default:"Nenhum" }}</span>
+                    <strong>Plano de Saúde:</strong> <span>{{ paciente.plano_saude|default:"Não informado" }}</span>
+                </div>
+                </div>
+        {% endif %}
+
+        <div class="edit-button-section">
+            <a href="{% url 'editar_perfil' %}" class="btn-edit">Editar Perfil</a> </div>
+    </div> 
+</div>
+{% endblock %}

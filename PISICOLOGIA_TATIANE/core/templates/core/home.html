@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css%}<link rel="stylesheet" href=" {% static 'css/core/home.css' %}" rel='stylesheet'> {%endblock%}
+
+{% block content %}
+<main>
+    <section id="inicio">
+        <div class="inicio">
+            <!-- Elementos decorativos animados -->
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            
+            <!-- Conteúdo original -->
+            <div>
+                <h1>Ingrid Tatiane</h1>
+                <p class="paragrafo">Terapia Cognitvo Comportamental
+                    Pós-graduanda em Intervenção ABA e Neuropsicologia
+                </p>
+                <p class="crp">CRP – 03/20795</p>
+                <p class="paragrafo">ingrid é uma profissional queajuda
+                    a superar desafios emocionais e comportamentais com 
+                    técnicas baseadas em evidências.
+                </p>
+            </div>
+            <img src="{% static 'img/core/Ingrid.svg' %}" alt="Ingrid">
+        </div>
+        <div class="cards">
+            <div class="card_1">
+                <img src="{% static 'img/core/icons/card 1.svg'%}" alt="">
+                <h2 class="titulo">Atendimento Focado para Crianças e Adolecentes</h2>
+                <p class="text">Seu trabalho envolve criar um ambiente acolhedor 
+                    e seguro, onde crianças e adolescentes possam 
+                    explorar suas emoções e desenvolver habilidades 
+                    para enfrentar as dificuldades do dia a dia, 
+                    promovendo um crescimento saudável e equilibrado</p>
+            </div>
+            <div class="card_2">
+                <img src="{% static 'img/core/icons/card 2.svg'%}" alt="">
+                <h2 class="titulo">Avaliação Pisicologica Especializada</h2>
+                <p class="text">Realiza avaliações que ajudam a identificar características 
+                    emocionais, comportamentais e cognitivas, fornecendo informações 
+                    cruciais para o desenvolvimento de intervenções personalizadas e 
+                    eficazes.
+                </p>
+            </div>
+            <div class="card_3">
+                <img src="{% static 'img/core/icons/card 3.svg'%}" alt="">
+                <h2 class="titulo">Tirar Duvidas dos Pais</h2>
+                <p class="text">Ingrid cria um espaço de diálogo aberto, onde os pais se sentem acolhidos 
+                    e seguros para discutir suas inquietações, contribuindo para um ambiente 
+                    familiar mais harmonioso e saudável.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre">
+        <div class="text_sobre">
+            <h2>Sobre Ingrid Tatiane</h2>
+            <p class="paragrafo">Ingrid Tatiane é uma psicóloga especializada em Terapia 
+                Cognitivo-Comportamental (TCC) e pós-graduada em Intervenção ABA (Análise 
+                do Comportamento Aplicada) e Neuropsicologia.
+            </p>
+            <p class="paragrafo">Ela se dedica a ajudar pessoas a superar desafios emocionais 
+                e comportamentais através de intervenções baseadas em evidências científicas. 
+                A Terapia Cognitivo-Comportamental é uma abordagem eficaz para tratar uma 
+                variedade de transtornos mentais, como ansiedade e depressão, focando na 
+                identificação e modificação de padrões de pensamento e comportamento 
+                disfuncionais.Além disso, sua especialização em Intervenção ABA a capacita 
+                a trabalhar com crianças e adultos com Transtorno do Déficit de Atenção e 
+                Hiperatividade (TDAH) e autismo, utilizando técnicas de reforço positivo para 
+                promover mudanças comportamentais positivas.
+            </p>
+            <p class="paragrafo">Ingrid Tatiane também se destaca no campo da Neuropsicologia, 
+                onde estuda as bases neurológicas do comportamento e da cognição, ajudando a 
+                entender melhor como o cérebro influencia nossas emoções e ações.
+            </p>
+        </div>
+        <div class="imagens">
+            <img class="imagem_escada" src="{% static 'img/core/Ingrid_sobre/sobre.webp'%}" alt="" loading="lazy">
+            
+        </div>
+    </section>
+    <section id="especialidades">
+        <div>
+            <h2 class="cima espec">Especialidades</h2>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <img src="{% static 'img/core/icons/especialidade 1.svg'%}" alt="">
+                <h3>Superação de desafios</h3>
+                <p class="text">Tratar ansiedade, depressão e estresse, modificando padrões de pensamento e 
+                    comportamento
+                </p>
+            </div>
+            <div class="card">
+                <img src="{% static 'img/core/icons/especialidade 2.svg' %}" alt="">
+                <h3> TDAH e autismo</h3>
+                <p class="text">
+                    Incentivar comportamentos desejáveis e desenvolver habilidades sociais e 
+                    comunicativas
+                </p>
+            </div>
+            <div class="card">
+                <img src="{% static 'img/core/icons/especialidade 3.svg'%}" alt="">
+                <h3>Reforço positivo</h3>
+                <p class="text">Recompensa comportamentos saudáveis para promover mudanças comportamentais 
+                    duradouras.
+                </p>
+            </div>
+            <div class="card">
+                <img src="{% static 'img/core/icons/especialidade 4.svg'%}" alt="">
+                <h3> Crescimento saudável e equilibrado</h3>
+                <p class="text">
+                    Desenvolvimento integral dos pacientes, focando no bem-estar emocional, cognitivo 
+                    e comportamental.
+                </p>
+            </div>
+        </div>
+        <h2 class="espec baixo">Ver mais...</h2>
+    </section>
+
+    <section id="tratamentos">
+        <div class="oculto">
+            <p>Em breve</p>
+        </div>
+        
+    </section>
+
+    <section id="feedback">
+        <h2>Feedback</h2>
+        <div class="cabecario">
+            <img src="img/icons/pessoa.svg" alt="">
+            <div class="info">
+                <label class="nick" for="nome"></label>
+                {% comment %} esquema das estrelas {% endcomment %}
+                <div class="estrela">
+                    <img src="{% static 'img/core/icons/estrela.svg'%}" alt="">
+                    <img src="{% static 'img/core/icons/estrela.svg'%}" alt="">
+                    <img src="{% static 'img/core/icons/estrela.svg'%}" alt="">
+                    <img src="{% static 'img/core/icons/estrela.svg'%}" alt="">
+                    <img src="{% static 'img/core/icons/estrela.svg'%}" alt="">
+                </div>
+            </div>
+        </div>
+            <div class="comment-list" id="comment-list">
+                <p>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                    isso é o teste de comentario <br>
+                </p>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

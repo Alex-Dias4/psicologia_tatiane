@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meus Pacientes{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/public/dashboard_shared.css' %}">
+    <style>
+        .pacientes-container { max-width: 900px; margin: 2rem auto; }
+        .paciente-list-wrapper {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 1.5rem;
+        }
+        .paciente-item { 
+            display: grid;
+            /* Colunas: Nome(3fr), Info(2fr), Ações(1fr) */
+            grid-template-columns: 3fr 2fr 1fr; 
+            gap: 1rem; 
+            padding: 1rem 0; 
+            border-bottom: 1px solid #eee; 
+            align-items: center;
+        }
+        .paciente-list-wrapper .paciente-item:last-of-type { border-bottom: none; padding-bottom: 0; }
+        .paciente-header { font-weight: 600; color: #555; font-size: 0.9rem; padding-bottom: 1rem; border-bottom: 2px solid #ddd; margin-bottom: 0.5rem; }
+        .paciente-nome { font-weight: 500; font-size: 1rem; }
+        .paciente-info-extra { font-size: 0.85rem; color: #777; }
+        .paciente-actions a { color: #3498db; text-decoration: none; font-size: 0.9rem; }
+        .paciente-actions a:hover { text-decoration: underline; }
+        .paciente-actions { justify-self: center; }
+
+        /* Paginação (copiada da agenda_completa) */
+        .pagination { display: flex; justify-content: center; margin-top: 2.5rem; padding-bottom: 1rem; }
+        /* ... (cole o resto do CSS da paginação aqui, se não estiver no shared.css) ... */
+         .pagination a, .pagination span { padding: 0.6rem 1.1rem; margin: 0 0.3rem; border: 1px solid #ddd; text-decoration: none; color: #3498db; border-radius: 6px; transition: all 0.2s ease; }
+        .pagination a:hover { background-color: #f0f8ff; border-color: #aed9f5; }
+        .pagination .current { background-color: #3498db; color: white; border-color: #3498db; font-weight: bold; }
+        .pagination .disabled { color: #ccc; border-color: #eee; cursor: default; }
+        .pagination .disabled:hover { background-color: transparent; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container pacientes-container">
+    <div class="dashboard-header">
+        <h1>Meus Pacientes</h1>
+    </div>
+
+    <div class="paciente-list-wrapper">
+        <div class="paciente-item paciente-header">
+            <span>Nome</span>
+            <span>Plano / Responsável</span>
+            <span>Ações</span>
+        </div>
+
+        {% for paciente in page_obj %}
+            <div class="paciente-item">
+                <span class="paciente-nome">{{ paciente.usuario.nome }}</span>
+                <span class="paciente-info-extra">
+                    Plano: {{ paciente.plano_saude|default:"N/A" }} <br>
+                    Resp: {{ paciente.responsavel|default:"N/A" }}
+                </span>
+                <span class="paciente-actions">
+                    <a href="{% url 'psicologo:paciente_historico' paciente.id %}">Ver Histórico</a> </span>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #7f8c8d; padding: 2rem;">Nenhum paciente encontrado.</p>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% else %}
+                <span class="disabled">&laquo; Primeira</span>
+                <span class="disabled">Anterior</span>
+            {% endif %}
+
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            {% else %}
+                <span class="disabled">Próxima</span>
+                <span class="disabled">Última &raquo;</span>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}

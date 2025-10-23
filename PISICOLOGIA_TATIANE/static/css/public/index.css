@@ -1,0 +1,202 @@
+*{
+    box-sizing: border-box;
+    font-family: "IM Fell English", sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+ body {
+    color: black;
+ }
+ .paragrafo{
+    font-size: 32px;
+    text-align: justify;
+    padding-bottom: 32px;
+ }
+ .text{
+    font-size: 20px;
+    text-align: center;
+ }
+ .crp{
+    font-size: 40px;
+    padding-bottom: 32px;
+ }
+
+ header{
+    background-color: #FFEAD0;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+ }
+
+ header .logo{
+   margin-left: 2rem;
+ }
+ header .nav{
+   display: flex;
+   padding: 16px 32px;
+   align-items: center;
+   gap: 32px;
+ }
+ header .nav nav{
+   display: flex;
+   gap: 32px;
+ }
+ header .nav  nav a{
+    margin: 0;
+   color: black;
+   font-size: 16px;
+   text-decoration: none;
+ }
+/* --- Container da Navegação --- */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff; /* Fundo branco para contraste */
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    position: sticky; /* Faz a navegação ficar no topo ao rolar a página */
+    top: 20px;
+    z-index: 1000;
+    backdrop-filter: blur(10px); /* Efeito de vidro fosco (opcional) */
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* --- Links de Navegação --- */
+.nav nav a {
+    text-decoration: none;
+    color: #555; /* Cor do texto */
+    font-weight: 500;
+    margin: 0 1rem;
+    position: relative;
+    transition: color 0.3s ease; /* Transição suave na cor do texto */
+}
+
+/* Efeito de sublinhado animado no hover */
+.nav nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 50%;
+    background-color: #ff9a9e; /* Cor do sublinhado (combina com o fundo) */
+    transition: all 0.3s ease-in-out;
+    transform: translateX(-50%);
+}
+
+.nav nav a:hover {
+    color: #333; /* Escurece o texto no hover */
+}
+
+.nav nav a:hover::after {
+    width: 80%; /* Expande o sublinhado no hover */
+}
+
+/* Classe para destacar o link ativo (será adicionada com JavaScript) */
+.nav nav a.active {
+    color: #ff9a9e; /* Cor do link ativo */
+    font-weight: bold;
+}
+
+.nav nav a.active::after {
+    width: 80%; /* Mantém o sublinhado visível no link ativo */
+}
+
+
+/* --- Ícones de Redes Sociais --- */
+.social {
+    display: flex;
+    gap: 0.8rem; /* Espaço entre os ícones */
+}
+
+.social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: #f0f0f0; /* Fundo cinza claro */
+    border-radius: 50%;
+    transition: all 0.3s ease; /* Transição suave para todas as propriedades */
+}
+
+.social a img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+/* Efeitos de hover para cada ícone */
+.social a:nth-child(1):hover { /* Facebook */
+    background-color: #1877f2;
+    transform: scale(1.1);
+}
+.social a:nth-child(2):hover { /* Instagram */
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    transform: scale(1.1);
+}
+.social a:nth-child(3):hover { /* WhatsApp */
+    background-color: #25d366;
+    transform: scale(1.1);
+}
+
+.social a:hover img {
+    transform: rotate(15deg) scale(1.1);
+    filter: brightness(0) invert(1); /* Deixa o ícone branco */
+}
+
+.nav .login{
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.nav .login .nav-link{
+    text-decoration: none;
+    color: black;
+}
+header .nav .login .nav-link.login{
+position: relative;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 50%, #fecfef 75%, #fecfef 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  overflow: hidden;
+  padding: 1rem;
+  border-radius: 24px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* --- ADICIONE ESSE NOVO BLOCO --- */
+header .nav .login .nav-link.login:hover {
+    transform: scale(1.05); /* Aumenta o tamanho em 5% */
+    filter: brightness(1.1); /* Aumenta o brilho em 10% */
+    cursor: pointer; /* Muda o cursor para a "mãozinha" */
+}
+
+/* --- ADICIONE ESSE NOVO BLOCO --- */
+header .nav .login .nav-link.cadastro {
+    display: inline-block; /* Necessário para o transform funcionar bem */
+    transition: transform 0.3s ease;
+}
+
+/* --- ADICIONE ESSE NOVO BLOCO --- */
+header .nav .login .nav-link.cadastro:hover {
+    transform: scale(1.1); /* Aumenta o texto em 10% */
+    cursor: pointer;
+}
+
+/* CSS para a foto no header */
+.nav-profile-pic a {
+    display: inline-block; /* Remove sublinhado de link */
+}
+.profile-pic-small {
+    width: 40px; /* Ajuste o tamanho como preferir */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle; /* Alinha com o texto "Sair" */
+    margin-right: 10px; /* Espaço antes de "Sair" */
+    border: 1px solid #ddd; /* Borda sutil */
+}

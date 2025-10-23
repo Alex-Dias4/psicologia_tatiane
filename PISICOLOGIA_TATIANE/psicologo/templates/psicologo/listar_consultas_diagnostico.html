@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Escolher Consulta para Diagnóstico{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/public/dashboard_shared.css' %}">
+    <style>
+        .lista-container { max-width: 800px; margin: 2rem auto; }
+        .consulta-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #eee; }
+        .consulta-item:last-child { border-bottom: none; }
+        .consulta-info span { display: block; }
+        .consulta-info .paciente { font-weight: bold; }
+        .consulta-info .data-hora { font-size: 0.9em; color: #777; }
+        .btn-diagnostico { 
+            padding: 0.5rem 1rem; 
+            background-color: #3498db; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            transition: background-color 0.2s ease;
+        }
+        .btn-diagnostico:hover { background-color: #2980b9; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container lista-container card">
+    <div class="dashboard-header">
+        <h1>Escolher Consulta para Diagnóstico</h1>
+        <p>Selecione uma consulta realizada para adicionar um diagnóstico.</p>
+    </div>
+
+    {% for consulta in consultas_realizadas %}
+        <div class="consulta-item">
+            <div class="consulta-info">
+                <span class="paciente">{{ consulta.paciente.usuario.nome }}</span>
+                <span class="data-hora">{{ consulta.data|date:"d/m/Y" }} às {{ consulta.hora|time:"H:i" }}</span>
+            </div>
+            <a href="{% url 'psicologo:registrar_diagnostico' consulta.id_consulta %}" class="btn-diagnostico">Adicionar Diagnóstico</a>
+        </div>
+    {% empty %}
+        <p style="text-align: center; color: #7f8c8d; padding: 2rem;">Nenhuma consulta realizada encontrada para diagnóstico.</p>
+    {% endfor %}
+</div>
+{% endblock %}

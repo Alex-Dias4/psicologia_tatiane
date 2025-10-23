@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+        <title>{% block title %}Pisicologa Tatiane{% endblock %}</title>
+        <meta name="description" content="Transformando Desafios em Conquistas: Promovendo Saúde Mental e Bem-Estar, para um Crescimento Saudável e Equilibrado."
+        name="viewport" content="width=device-width,initial-scale=1"/>
+
+        <link rel="stylesheet" href="{%static 'css/public/footer.css'%}">
+        <link rel="stylesheet" href="{%static 'css/public/index.css'%}">
+        {% block css %}{% endblock %}
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <header>
+    
+
+    {% if user.is_authenticated %}
+        
+            
+        {% if user.usuario %}
+                
+            {% if user.usuario.psicologo %}
+                <div class="logo">
+                    <a href="{% url 'psicologo:dashboard' %}"> <img src="{% static 'img/core/IngridTatianePisicologia.svg'%}">
+                    </a>
+                </div>
+                <div class="nav"> 
+                    <nav>
+                        <a class="nav-link" href="{% url 'psicologo:agenda_completa' %}">Minha Agenda</a>
+                        <a class="nav-link" href="{% url 'psicologo:meus_pacientes' %}">Meus Pacientes</a>
+                    </nav>
+                
+            {% elif user.usuario.paciente %}
+                <div class="logo">
+                    <a href="{% url 'psicologo:dashboard' %}"> <img src="{% static 'img/core/IngridTatianePisicologia.svg'%}">
+                    </a>
+                </div>
+                <div class="nav">
+                    <nav>
+                        <a class="nav-link" href="{% url 'paciente:meus_agendamentos' %}">Meus Agendamentos</a>
+                        <a class="nav-link" href="{% url 'agendar_consulta' %}">Agendar Consulta</a>
+                    </nav>
+                 
+            {% endif %}
+            
+        {% endif %} 
+                <div class="login">
+                    
+                        {% if user.usuario.foto_perfil %}
+                            <a class="nav-item nav-profile-pic" href="{% url 'meu_perfil' %}">
+                                <img src="{{ user.usuario.foto_perfil.url }}" alt="Foto de Perfil" class="profile-pic-small">
+                            </a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'meu_perfil' %}">Meu Perfil</a>
+                        {% endif %}
+                            <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                </div>
+            </div>
+
+    {% else %}
+    <div class="logo">
+        <a href="{% url 'home' %}"> <img src="{% static 'img/core/IngridTatianePisicologia.svg'%}">
+        </a>
+    </div>
+        <div class="nav"> 
+            <nav>
+                <a href="#inicio">Inicio</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#especialidades">Especialidade</a>
+                <a href="#tratamentos">Tratamentos</a>
+            </nav>
+            <div class="social">
+                <a href="https://www.facebook.com/ingrid.tatiane.1"> <img src="{% static 'img/core/icons/facebook.svg'%}" alt=""></a>
+                <a href="https://www.instagram.com/psi.ingridgama/"> <img src="{% static 'img/core/icons/Instagram.svg'%}" alt=""></a>
+                <a href="https://wa.me/557499138-4237"><img src="{% static 'img/core/icons/whatsapp.svg'%}" alt=""></a>
+            </div>
+            <div class="login">
+                <a class="nav-link login" href="{% url 'account_view' %}">Entrar</a>
+                <a class="nav-link cadastro" href="{% url 'account_view' %}?form=register">Cadastre-se</a>
+            </div>
+        </div>
+    {% endif %}
+
+</header>
+    {% if messages %}
+        <div class="messages-container" style="padding: 1rem 1.5rem; max-width: 1200px; margin: 1rem auto 0 auto;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert" 
+                    style="padding: 1rem 1.5rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .375rem; 
+                            /* Estilos básicos para diferentes tipos de mensagem */
+                            {% if message.tags == 'success' %} background-color: #d4edda; border-color: #c3e6cb; color: #155724; 
+                            {% elif message.tags == 'error' %} background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; 
+                            {% elif message.tags == 'warning' %} background-color: #fff3cd; border-color: #ffeeba; color: #856404; 
+                            {% else %} background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; /* Info e default */
+                            {% endif %} ">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+        {% block content %}{% endblock %}
+
+        <footer>
+            <section id="atendimento">
+                <div>
+                    <h2>Atendimento Prescencial</h2>
+                    <P>Clínica de Psicologia Ingrid Tatiane </P>
+                    <p class="numero">Rua da Serenidade, 123 Bairro Jardim das Flores Senhor do Bonfim, Bahia, Brasil CEP: <ins>48970-00</ins></p>
+                    <p class="numero">Telefone: <a href="https://wa.me/557499138-4237">74 99138-4237</a></p>
+                    <p>Email: <a href="mailto:contato@clinicaingridtatiane.com" target="_blank">contato@clinicaingridtatiane.com</a></p>
+                    <div>
+                        <p>Fale com a gente</p>
+                    </div>
+                </div>
+                <div style="display: flex;flex-direction: column; gap: 24px;">
+                    {% if user.is_authenticated %}
+                        {# --- Usuário Logado --- #}
+                        <h2>Fale Conosco</h2> {# Ou "Agendar Consulta", como preferir #}
+                        {% if user.usuario %}
+                            <p>Olá, {{ user.usuario.nome }}! Pronto para sua próxima sessão?</p>
+                            <a href="{% url 'agendar_consulta' %}" class="btn-footer-agendar">Agendar Consulta</a>
+                        {% else %}
+                            <p>Bem-vindo(a)! Complete seu perfil para acessar todas as funcionalidades.</p>
+                            <a href="{% url 'completar_perfil' %}" class="btn-footer-agendar" style="background-color: #ffc107; color: #333;">Completar Perfil</a>
+                        {% endif %}
+
+                    {% else %}
+                        {# --- Usuário Deslogado (Visitante) --- #}
+                        <h2>Marcar Uma Consulta</h2>
+                        <p style="font-size: 0.9em; margin-bottom: 1em;">Preencha os dados abaixo e envie-nos uma mensagem pelo WhatsApp:</p>
+                        
+                        {# Formulário estático que será lido pelo JavaScript #}
+                        <form id="footer-contact-form"> {# Adicionado um ID ao form #}
+                            <label for="footer-nome">Nome:</label>
+                            <input type="text" id="footer-nome" name="nome" size="50" maxlength="200" required> {# Adicionado ID e required #}
+
+                            <label for="footer-email">Email:</label>
+                            <input type="email" id="footer-email" name="email" size="20"> {# Adicionado ID #}
+
+                            <label for="footer-telefone">Telefone:</label>
+                            <input type="text" id="footer-telefone" name="tel" size="20" required> {# Adicionado ID e required #}
+
+                            <label for="footer-descricao">Descrição (opcional):</label>
+                            <input type="text" id="footer-descricao" name="description" size="50"> {# Adicionado ID #}
+
+                            <button type="button" id="footer-whatsapp-btn" class="btn-footer-whatsapp" style="margin-top: 1rem;">
+                                Enviar via WhatsApp
+                            </button>
+                            <p style="font-size: 0.8em; margin-top: 0.5em;">(Você será redirecionado para o WhatsApp)</p>
+                        </form>
+                    {% endif %}
+                </div>
+            </section>
+            <div class="mapa">
+                
+            </div>
+            <section id="rotape">
+                <div class="onda"></div>
+                <div class="rotape_content">
+                    <div>
+                        <h2>Ingrid Tatiane Pisicologia</h2>
+                        <p>Transformando Desafios em Conquistas: Promovendo Saúde Mental e Bem-Estar, para um 
+                            Crescimento Saudável e Equilibrado.
+                        </p>
+                    </div>
+                    <div>
+                        <h2>Links rápidos</h2>
+                        <nav>
+                            <a href="#inicio">Inicio</a>
+                            <a href="#sobre">Sobre</a>
+                            <a href="#especialidades">Especialidade</a>
+                            <a href="#tratamentos">Tratamentos</a>
+                        </nav>
+                    </div>
+                    <div>
+                        <h2>Encontre-nos</h2>
+                        <p class="numero">Rua da Serenidade, 123 Bairro Jardim das Flores Senhor do Bonfim, Bahia, Brasil CEP: <ins>48970-00</ins></p>
+                        <p class="numero">Telefone: <a href="https://wa.me/557499138-4237">74 99138-4237</a></p>
+                        <p>Email: <a href="mailto:contato@clinicaingridtatiane.com" target="_blank">contato@clinicaingridtatiane.com</a></p>
+                    </div>
+                </div>
+            </section>
+        </footer>
+
+        <div id="copyrigth">
+            Desenvolvido por <a href="https://wa.me/5574981259988" target="_blank">@alexandredias_124</a>
+        </div>
+
+        {% block extra_js %}{% endblock %}
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                // Seleciona todos os elementos de alerta (mensagens flash)
+                const alerts = document.querySelectorAll('.messages-container .alert');
+                
+                alerts.forEach(function(alert) {
+                    // Define um tempo (em milissegundos) para a mensagem desaparecer
+                    const delay = 5000; // 5000ms = 5 segundos (ajuste se desejar)
+
+                    // Adiciona um estilo inicial para a transição de opacidade
+                    alert.style.transition = 'opacity 0.5s ease-out';
+                    
+                    // Define o timeout para esconder a mensagem
+                    setTimeout(() => {
+                        alert.style.opacity = '0'; // Começa a desaparecer
+                        
+                        // Espera a transição de opacidade terminar antes de remover/esconder
+                        setTimeout(() => {
+                            // Opção 1: Remove completamente o elemento
+                            // alert.remove(); 
+                            
+                            // Opção 2: Apenas esconde (útil se houver outros estilos)
+                            alert.style.display = 'none'; 
+                        }, 500); // 500ms = tempo da transição de opacidade
+                        
+                    }, delay);
+                });
+            });
+            document.addEventListener('DOMContentLoaded', function() {
+            const footerWhatsappBtn = document.getElementById('footer-whatsapp-btn');
+            
+            // Só executa se o botão existir (ou seja, se o usuário estiver deslogado)
+            if (footerWhatsappBtn) {
+                footerWhatsappBtn.addEventListener('click', function() {
+                    const nomeInput = document.getElementById('footer-nome');
+                    const emailInput = document.getElementById('footer-email');
+                    const telefoneInput = document.getElementById('footer-telefone');
+                    const descricaoInput = document.getElementById('footer-descricao');
+
+                    const nome = nomeInput.value.trim();
+                    const email = emailInput.value.trim();
+                    const telefone = telefoneInput.value.trim();
+                    const descricao = descricaoInput.value.trim();
+                    
+                    // --- Substitua pelo número da clínica ---
+                    const phoneNumber = '5574991384237'; 
+                    // --- Fim da substituição ---
+
+                    // Validação básica
+                    if (!nome || !telefone) {
+                        alert('Por favor, preencha pelo menos o Nome e o Telefone.');
+                        if(!nome) nomeInput.focus(); // Foca no campo vazio
+                        else telefoneInput.focus();
+                        return; // Impede o envio
+                    }
+
+                    // Monta a mensagem pré-formatada
+                    let message = `*Novo Contato via Site*\n\n`;
+                    message += `*Nome:* ${nome}\n`;
+                    if (email) message += `*Email:* ${email}\n`;
+                    message += `*Telefone:* ${telefone}\n`;
+                    if (descricao) message += `*Descrição:* ${descricao}\n`;
+                    
+                    // Codifica a mensagem para URL
+                    const encodedMessage = encodeURIComponent(message);
+                    
+                    // Cria o link do WhatsApp
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                    
+                    // Abre o link em uma nova aba
+                    window.open(whatsappUrl, '_blank');
+                });
+            }
+        });
+        </script>
+    </body>
+</html>

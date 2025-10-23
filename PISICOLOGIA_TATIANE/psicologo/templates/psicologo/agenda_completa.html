@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Minha Agenda Completa{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/public/dashboard_shared.css' %}">
+    
+    <style>
+        .agenda-container { 
+            max-width: 1000px; /* Um pouco mais largo para a tabela */
+            margin: 2rem auto; 
+        }
+
+        /* Aplica o estilo de card à lista inteira */
+        .agenda-list-wrapper {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 1.5rem; /* Espaço após o título */
+        }
+
+        /* Definição do Grid da Lista */
+        .consulta-grid {
+            display: grid;
+            /* Colunas: Data(1.5fr), Paciente(2.5fr), Status(1fr), Ações(1fr) */
+            /* Ajuste 'fr' (fração) conforme necessário */
+            grid-template-columns: 1.5fr 2.5fr 1fr 1fr; 
+            gap: 0.5rem 1rem; /* Espaçamento vertical e horizontal */
+            align-items: center; /* Alinha verticalmente no centro */
+            padding: 1rem 0; /* Espaçamento interno vertical */
+            border-bottom: 1px solid #eee; 
+        }
+        
+        /* Remove a borda do último item */
+        .agenda-list-wrapper .consulta-grid:last-of-type { 
+            border-bottom: none; 
+            padding-bottom: 0; /* Remove padding extra do último */
+        }
+
+        /* Estilo do Cabeçalho da Lista */
+        .consulta-header { 
+            font-weight: 600; 
+            color: #555; 
+            font-size: 0.9rem;
+            padding-bottom: 1rem; /* Mais espaço abaixo do header */
+            border-bottom: 2px solid #ddd; /* Borda mais forte */
+            margin-bottom: 0.5rem; /* Espaço antes do primeiro item */
+        }
+        
+        /* Estilo para cada célula de dado */
+        .consulta-grid span {
+            font-size: 0.95rem;
+        }
+
+        /* Estilos dos Status (já estavam bons) */
+        .consulta-status { 
+            padding: 0.4rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            text-align: center; 
+            font-weight: 500;
+            justify-self: center; /* Centraliza o status na sua coluna */
+        }
+        .status-confirmada { background-color: #d4edda; color: #155724; }
+        .status-pendente { background-color: #fff3cd; color: #856404; }
+        .status-realizada { background-color: #d1ecf1; color: #0c5460; }
+        .status-cancelada { background-color: #f8d7da; color: #721c24; }
+        .status-aguardando_remarcacao { background-color: #ffc107; color: #333; }
+        
+        /* Ações (Links) */
+        .consulta-actions a {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 0.5rem; /* Espaço entre links */
+            font-size: 0.9rem;
+        }
+        .consulta-actions a:hover {
+            text-decoration: underline;
+        }
+        .consulta-actions {
+             justify-self: center; /* Centraliza os links de ação */
+                 gap: 6px;
+                display: flex;
+                flex-direction: column;
+        }
+
+        /* Estilos Aprimorados da Paginação */
+        .pagination { 
+            display: flex; 
+            justify-content: center; 
+            margin-top: 2.5rem; 
+            padding-bottom: 1rem; /* Espaço abaixo */
+        }
+        .pagination a, .pagination span {
+            padding: 0.6rem 1.1rem; /* Botões um pouco maiores */
+            margin: 0 0.3rem;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #3498db;
+            border-radius: 6px; /* Bordas mais suaves */
+            transition: all 0.2s ease;
+        }
+        .pagination a:hover {
+            background-color: #f0f8ff; /* Fundo azul claro no hover */
+            border-color: #aed9f5;
+        }
+        .pagination .current { 
+            background-color: #3498db; 
+            color: white; 
+            border-color: #3498db; 
+            font-weight: bold;
+        }
+        .pagination .disabled { 
+            color: #ccc; 
+            border-color: #eee; 
+            cursor: default; /* Indica que não é clicável */
+        }
+        .pagination .disabled:hover {
+             background-color: transparent; /* Remove hover de desabilitado */
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container agenda-container"> <div class="dashboard-header"> <h1>Minha Agenda Completa</h1>
+    </div>
+
+    <div class="agenda-list-wrapper"> 
+        <div class="consulta-grid consulta-header">
+            <span>Data / Hora</span>
+            <span>Paciente</span>
+            <span>Status</span>
+            <span>Ações</span>
+        </div>
+
+        {% for consulta in page_obj %}
+            <div class="consulta-grid">
+                <span>{{ consulta.data|date:"d/m/Y" }} - {{ consulta.hora|time:"H:i" }}</span>
+                <span>{{ consulta.paciente.usuario.nome }}</span>
+                <span class="consulta-status status-{{ consulta.status }}">
+                    {{ consulta.get_status_display }}
+                    {% if consulta.paciente_confirmou_presenca and consulta.status == 'confirmada' %}
+                        <span title="Presença confirmada pelo paciente" style="color: green; font-weight: bold; margin-left: 5px;">✓</span>
+                    {% endif %}
+                </span>
+                <span class="consulta-actions">
+                    <a href="{% url 'psicologo:consulta_detalhes' consulta.id_consulta %}" 
+                    class="btn-action btn-detalhes" 
+                    style="background-color: #6c757d; color: white; border-radius: 4px; padding: 0.3rem 0.6rem;">
+                    Detalhes
+                    </a> 
+                    
+                    {% if consulta.status == 'realizada' %}
+                        <a href="{% url 'psicologo:registrar_diagnostico' consulta.id_consulta %}" 
+                            class="btn-action btn-diagnostico" 
+                            style="background-color: #007bff; color: white; border-radius: 4px; padding: 0.3rem 0.6rem; margin-top: 4px;">
+                            Diagnóstico
+                        </a>
+                    {% endif %}
+                </span>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #7f8c8d; padding: 2rem;">Nenhuma consulta encontrada.</p>
+        {% endfor %}
+    </div> <div class="pagination">
+        </div>
+</div>
+{% endblock %}

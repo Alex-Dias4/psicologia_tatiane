@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes da Consulta{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/public/dashboard_shared.css' %}">
+    <style>                
+        .consulta-status { 
+            padding: 0.4rem 0.8rem; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            text-align: center; 
+            font-weight: 500;
+            display: inline-block; 
+            justify-self: start; 
+            width: fit-content; 
+        }
+        .status-confirmada { background-color: #d4edda; color: #155724; }
+        .status-pendente { background-color: #fff3cd; color: #856404; }
+        .status-realizada { background-color: #d1ecf1; color: #0c5460; }
+        .status-cancelada { background-color: #f8d7da; color: #721c24; }
+        .status-aguardando_remarcacao { background-color: #ffc107; color: #333; }
+
+        .detalhes-container { max-width: 800px; margin: 2rem auto; position: relative; z-index: 5 }
+        .info-section { margin-bottom: 1.5rem; }
+        .info-section h2 { font-size: 1.3rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        .info-grid { display: grid; grid-template-columns: 150px 1fr; gap: 0.5rem 1rem; align-items: center; }
+        .info-grid strong { color: #555; }
+        
+        /* Estilos dos botões de ação (copiados da agenda_completa.html) */
+        .action-buttons { margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .btn-action { padding: 0.6rem 1rem; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 0.9rem; text-decoration: none; transition: opacity 0.2s ease; }
+        .btn-action:hover { opacity: 0.85; }
+        .btn-confirmar { background-color: #28a745; } /* Verde */
+        .btn-cancelar { background-color: #dc3545; } /* Vermelho */
+        .btn-realizada { background-color: #17a2b8; } /* Azul-ciano */
+        .btn-diagnostico { background-color: #007bff; } /* Azul padrão */
+
+        /* Lista de diagnósticos */
+        .diagnosticos-list { list-style: none; padding-left: 0; }
+        .diagnostico-item { background-color: #f8f9fa; padding: 0.8rem; border-radius: 5px; margin-bottom: 0.5rem; border: 1px solid #eee; }
+        .diagnostico-item strong { color: #333; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container detalhes-container dashboard-card">
+    <div class="dashboard-header" style="margin-bottom: 2rem;">
+        <h1>Detalhes da Consulta</h1>
+    </div>
+
+    <div class="info-section">
+        <h2>Informações Gerais</h2>
+        <div class="info-grid">
+            <strong>Paciente:</strong> <span>{{ consulta.paciente.usuario.nome }}</span>
+            <strong>Data:</strong> <span>{{ consulta.data|date:"d/m/Y" }}</span>
+            <strong>Hora:</strong> <span>{{ consulta.hora|time:"H:i" }}</span>
+            <strong>Status Atual:</strong> 
+            <span class="consulta-status status-{{ consulta.status }}"> 
+                {{ consulta.get_status_display }}
+            </span>
+            <strong>Presença Paciente:</strong> 
+            <span>
+                {% if consulta.paciente_confirmou_presenca %}
+                    <span style="color: green; font-weight: bold;">✓ Confirmada</span>
+                {% else %}
+                    <span style="color: orange;">Aguardando Confirmação</span>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    {% if consulta.observacao or consulta.prescricao %}
+    <div class="info-section">
+        <h2>Observações e Prescrições</h2>
+        {% if consulta.observacao %}
+            <p><strong>Observações:</strong><br>{{ consulta.observacao|linebreaksbr }}</p>
+        {% endif %}
+        {% if consulta.prescricao %}
+             <p><strong>Prescrições:</strong><br>{{ consulta.prescricao|linebreaksbr }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="info-section">
+        <h2>Diagnósticos Registrados</h2>
+        <ul class="diagnosticos-list">
+            {% for diagnostico in diagnosticos_registrados %}
+                <li class="diagnostico-item">
+                    <strong>{{ diagnostico.cid10|default:"S/ CID" }}:</strong> {{ diagnostico.descricao }} 
+                    <small style="color: #777;">(Registrado em {{ diagnostico.data|date:"d/m/Y" }})</small>
+                </li>
+            {% empty %}
+                <li>Nenhum diagnóstico registrado para esta consulta.</li>
+            {% endfor %}
+        </ul>
+        {% if consulta.status == 'realizada' %}
+             <a href="{% url 'psicologo:registrar_diagnostico' consulta.id_consulta %}" 
+                class="btn-action btn-diagnostico" 
+                style="margin-top: 1rem; display: block; width: fit-content;"> 
+                Adicionar Novo Diagnóstico
+            </a>
+        {% endif %}
+    </div>
+    
+    <div class="action-buttons">
+        <strong>Ações:</strong>
+
+        {% if consulta.status == 'pendente' %}
+            <form method="POST" action="{% url 'psicologo:atualizar_status_consulta' consulta.id_consulta 'confirmada' %}" style="display: inline;">
+                {% csrf_token %}                                                     <button type="submit" class="btn-action btn-confirmar">Confirmar Consulta</button>
+            </form>
+            <form method="POST" action="{% url 'psicologo:atualizar_status_consulta' consulta.id_consulta 'cancelada' %}" style="display: inline;">
+                {% csrf_token %}                                                     <button type="submit" class="btn-action btn-cancelar">Cancelar Consulta</button>
+            </form>
+
+        {% elif consulta.status == 'confirmada' %}
+            <form method="POST" action="{% url 'psicologo:atualizar_status_consulta' consulta.id_consulta 'realizada' %}" style="display: inline;">
+                {% csrf_token %}                                                     <button type="submit" class="btn-action btn-realizada">Marcar como Realizada</button>
+            </form>
+            <form method="POST" action="{% url 'psicologo:atualizar_status_consulta' consulta.id_consulta 'cancelada' %}" style="display: inline;">
+                {% csrf_token %}                                                     <button type="submit" class="btn-action btn-cancelar">Cancelar Consulta</button>
+            </form>
+
+        {% elif consulta.status == 'realizada' %}
+            <span style="color: #555;">Consulta já realizada.</span>
+            {% elif consulta.status == 'cancelada' %}
+            <span style="color: #777;">Consulta cancelada. Nenhuma ação disponível.</span>
+        {% endif %}
+    </div>
+
+
+</div>
+{% endblock %}

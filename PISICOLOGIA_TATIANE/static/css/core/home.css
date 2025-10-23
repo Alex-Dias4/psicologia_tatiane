@@ -1,0 +1,569 @@
+h1 {
+  font-size: 64px;
+  padding-bottom: 32px;
+}
+
+#inicio .inicio {
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 35 0 83;
+}
+
+#inicio .cards {
+  background-color: #FFF6EB;
+  display: flex;
+  text-align: center;
+  color: #ffffff;
+}
+
+
+.inicio {
+  position: relative;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 50%, #fecfef 75%, #fecfef 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  overflow: hidden;
+  padding: 2rem;
+  padding-bottom: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Animação do gradiente */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Elementos decorativos animados */
+.inicio::before,
+.inicio::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+.inicio::before {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, #ff9a9e 0%, transparent 70%);
+  top: -50px;
+  left: -50px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.inicio::after {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #a1c4fd 0%, transparent 70%);
+  bottom: -100px;
+  right: -100px;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+/* Animação de flutuação */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+}
+
+/* Bolhas animadas */
+.inicio .bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 0;
+}
+
+.inicio .bubble:nth-child(1) {
+  width: 40px;
+  height: 40px;
+  top: 20%;
+  left: 10%;
+  animation: bubble 8s linear infinite;
+}
+
+.inicio .bubble:nth-child(2) {
+  width: 20px;
+  height: 20px;
+  top: 60%;
+  left: 80%;
+  animation: bubble 10s linear infinite;
+}
+
+.inicio .bubble:nth-child(3) {
+  width: 30px;
+  height: 30px;
+  top: 40%;
+  left: 70%;
+  animation: bubble 12s linear infinite;
+}
+
+@keyframes bubble {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+}
+
+/* Estrelas animadas */
+.inicio .star {
+  position: absolute;
+  display: block;
+  width: 0px;
+  height: 0px;
+  border-right: 10px solid transparent;
+  border-bottom: 7px solid rgba(255, 255, 255, 0.5);
+  border-left: 10px solid transparent;
+  transform: rotate(35deg);
+  z-index: 0;
+}
+
+.inicio .star:before {
+  border-bottom: 8px solid rgba(255, 255, 255, 0.5);
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  position: absolute;
+  height: 0;
+  width: 0;
+  top: -5px;
+  left: -6px;
+  display: block;
+  content: '';
+  transform: rotate(-35deg);
+}
+
+.inicio .star:after {
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: -10px;
+  width: 0px;
+  height: 0px;
+  border-right: 10px solid transparent;
+  border-bottom: 7px solid rgba(255, 255, 255, 0.5);
+  border-left: 10px solid transparent;
+  transform: rotate(-70deg);
+  content: '';
+}
+
+.inicio .star:nth-child(4) {
+  top: 10%;
+  left: 30%;
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+.inicio .star:nth-child(5) {
+  top: 70%;
+  left: 20%;
+  animation: twinkle 5s ease-in-out infinite 1s;
+}
+
+.inicio .star:nth-child(6) {
+  top: 30%;
+  left: 80%;
+  animation: twinkle 6s ease-in-out infinite 2s;
+}
+
+@keyframes twinkle {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: rotate(35deg) scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: rotate(35deg) scale(1.2);
+  }
+}
+
+/* Garantir que o conteúdo fique acima dos elementos animados */
+.inicio>div,
+.inicio>img {
+  position: relative;
+  z-index: 1;
+}
+
+/* Estilos para o texto */
+.inicio h1 {
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+}
+
+.inicio .paragrafo {
+  color: #444;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+.inicio .crp {
+  color: #555;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+.inicio img {
+  max-width: 100%;
+  height: auto;
+}
+
+
+
+.titulo {
+  padding: 10px 0;
+}
+
+/* Container dos cards */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+/* Estilo base para todos os cards */
+.card_1,
+.card_2,
+.card_3 {
+  flex: 1;
+  min-width: 300px;
+  max-width: 350px;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Efeito hover para todos os cards */
+.card_1:hover,
+.card_2:hover,
+.card_3:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Card 1 - Atendimento Focado */
+.card_1 {
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  border-top: 5px solid #00acc1;
+}
+
+.card_1::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 172, 193, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+/* Card 2 - Avaliação Psicológica */
+.card_2 {
+  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  border-top: 5px solid #8e24aa;
+}
+
+.card_2::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(142, 36, 170, 0.1) 0%, transparent 70%);
+  animation: rotate 25s linear infinite;
+}
+
+/* Card 3 - Tirar Dúvidas dos Pais */
+.card_3 {
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+  border-top: 5px solid #ffa000;
+}
+
+.card_3::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 160, 0, 0.1) 0%, transparent 70%);
+  animation: rotate 30s linear infinite;
+}
+
+/* Animação de rotação para o efeito de fundo */
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Imagens dos cards */
+.card_1 img,
+.card_2 img,
+.card_3 img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Títulos dos cards */
+.card_1 .titulo,
+.card_2 .titulo,
+.card_3 .titulo {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+  position: relative;
+  z-index: 1;
+}
+
+/* Texto dos cards */
+.card_1 .text,
+.card_2 .text,
+.card_3 .text {
+  color: #555;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+#sobre {
+  background-color: #FFF6EB;
+  display: flex;
+  align-items: center;
+  gap: 82px;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+#sobre h2 {
+  font-size: 32px;
+  padding-bottom: 54px;
+}
+
+#sobre .text_sobre {
+  width: 100%;
+}
+#sobre .text_sobre .paragrafo{
+  font-size: 24px;
+}
+
+.imagens {
+  width: 100%;
+  height: auto;
+}
+
+.imagens .imagem_escada {
+  width: 100%;
+  height: auto;
+}
+
+
+#especialidades {
+  background-color: #CC7000;
+}
+
+#especialidades .espec {
+  background-color: #A35A00;
+  color: #ffffff;
+  padding: 21px;
+  text-align: center;
+  align-items: center;
+}
+
+#especialidades .espec.baixo {
+  box-shadow: inset 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+}
+
+#especialidades .cima.espec {
+  box-shadow: inset 0px -10px 10px -10px rgba(0, 0, 0, 0.5);
+}
+
+#especialidades .cards {
+  display: flex;
+  align-items: stretch;
+  text-align: center;
+  /*gap: 13.818%;*/
+  padding: 5rem 3rem;
+}
+
+#especialidades .cards.zoom {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 32px;
+}
+
+#especialidades .card {
+  margin: 0px 20px 0 20px;
+  box-sizing: border-box;
+  background-color: #FFF6EB;
+  padding: 14px 14px 33px 14px;
+  max-width: 253px;
+
+  border-radius: 24px;
+}
+
+#especialidades .text {
+  margin: 14px 14px 33px 14px;
+}
+
+.oculto {
+  display: none;
+}
+
+#feedback {
+  background-color: #FFF6EB;
+  height: 701px;
+  width: 100%;
+  text-align: center;
+  padding: 120px 148px 199px 148px;
+}
+
+.cabecario {
+  display: flex;
+  align-items: center;
+  height: 136px;
+  width: 100%;
+  background-color: #FFEDD6;
+  padding-left: 50px;
+  gap: 31px;
+  border-radius: 1.2rem 1.2rem 0 0;
+}
+
+.cabecario .info {
+  position: relative;
+  margin-top: 28px;
+  text-align: left;
+  font-size: 32;
+}
+
+.cabecario .estrelas {
+  display: flex;
+  align-items: center;
+}
+
+#comment button {
+  position: relative;
+  float: right;
+  right: 1.5%;
+  top: -30;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+#commentario {
+  width: 100%;
+  height: 107px;
+  box-shadow: inset 0 12px 14px -10px rgba(0, 0, 0, 0.5);
+  border-top: none;
+  font-size: 24px;
+  padding: 25px 14px 25px 20px;
+  resize: none;
+}
+
+label#commentario.box {
+  width: 1632px;
+  height: 107px;
+  display: flex;
+  border: solid rgba(0, 0, 0, 0.45);
+}
+
+.comment-list {
+  border: #333 solid 1px;
+  border-top: none;
+  padding: 1.2rem;
+  border-radius: 0 0 1.2rem 1.2rem;
+  list-style: none;
+  height: auto;
+}
+
+.comment-list div {
+  background-color: #fff;
+  padding: 10px;
+  border-radius:
+    3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+/* Responsividade para os cards */
+@media (max-width: 768px) {
+  .cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card_1,
+  .card_2,
+  .card_3 {
+    max-width: 100%;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .inicio {
+    padding: 1.5rem;
+  }
+
+  .inicio h1 {
+    font-size: 2rem;
+  }
+
+  .inicio .paragrafo {
+    font-size: 1rem;
+  }
+}

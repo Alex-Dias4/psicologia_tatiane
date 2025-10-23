@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Paciente{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/public/dashboard_shared.css' %}">
+    <style>
+        /* Adiciona estilos para o status no dashboard do paciente */
+        .consulta-status-paciente {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 10px; /* Espaço antes do status */
+        }
+        .status-confirmada { background-color: #d4edda; color: #155724; }
+        .status-pendente { background-color: #fff3cd; color: #856404; }
+        .status-cancelada { background-color: #f8d7da; color: #721c24; }
+        .status-realizada { background-color: #d1ecf1; color: #0c5460; } /* Para histórico */
+        
+        /* Cole DENTRO do <style> em paciente/dashboard.html */
+
+        /* Ajustes específicos para a seção de boas-vindas do paciente */
+        .welcome-section { text-align: center; }
+        .welcome-subtitle { font-size: 1.1rem; color: #555; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+        /* Estilos dos status */
+        .consulta-status-paciente {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 10px; 
+            vertical-align: middle; 
+        }
+        .status-confirmada { background-color: #d4edda; color: #155724; }
+        .status-pendente { background-color: #fff3cd; color: #856404; }
+        .status-cancelada { background-color: #f8d7da; color: #721c24; }
+        .status-realizada { background-color: #d1ecf1; color: #0c5460; }
+        .status-aguardando_remarcacao { background-color: #ffc107; color: #333; } /* Laranja/Amarelo */
+
+        /* Estilos dos itens de consulta (paciente) */
+        .appointment-date-time {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 0.3rem;
+            display: flex; 
+            align-items: center;
+        }
+        .appointment-doctor-name {
+            color: #777;
+            font-size: 0.85rem;
+        }
+        .appointment-link { /* Link "Ver Detalhes" */
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-left: auto; 
+            white-space: nowrap; 
+        }
+        .appointment-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Botão Confirmar Presença (e outros botões inline) */
+        .btn { 
+            padding: 0.5rem 1rem; 
+            border-radius: 5px; 
+            font-weight: 500; 
+            text-decoration: none; 
+            transition: all 0.2s ease; 
+            cursor: pointer; 
+            border: none; 
+            font-size: 0.85rem; 
+            white-space: nowrap;
+        }
+        .btn-primary { 
+            background-color: #28a745; /* Verde */
+            color: white; 
+        }
+        .btn-primary:hover { 
+            background-color: #218838; 
+        }
+        /* Formulário inline para botões de ação */
+        form[style*="margin-left: auto"] { margin-left: auto; } 
+
+
+        /* Seção CTA */
+        .cta-section { 
+            text-align: center; 
+            padding: 2rem; 
+            background: linear-gradient(135deg, #e0f2f7 0%, #edf8ff 100%);
+            border-radius: 12px; 
+            margin: 2.5rem 0; 
+        }
+        .cta-title { 
+            font-size: 1.6rem; 
+            color: #004085; /* Azul escuro */
+            margin-bottom: 0.8rem; 
+            font-weight: 600; 
+        }
+        .cta-description { 
+            font-size: 1rem; 
+            color: #333; 
+            margin-bottom: 1.5rem; 
+            max-width: 600px; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        /* Estilo do botão CTA (rosa/vermelho que você escolheu) */
+        .btn-cta {
+            padding: 0.7rem 1.8rem; 
+            font-size: 1rem;       
+            background: linear-gradient(135deg, #f8a5c2 0%, #ff7b7b 100%); 
+            color: #fff; 
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 123, 123, 0.3); 
+            border: none;
+        }
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 123, 123, 0.4);
+        }
+
+        /* Card Plano de Saúde */
+        .health-plan-card { /* Classe específica para o card do plano */
+            max-width: 400px; margin: 1rem auto;
+        }
+        .health-plan-card .card-header { /* Ajuste do header */
+            border-bottom: none; padding-bottom: 0; margin-bottom: 0.5rem;
+        }
+        .health-plan-card .card-title { /* Ajuste do título */
+            text-align: left; margin: 0; font-size: 1.1rem;
+        }
+        .health-plan { 
+            background-color: #f8f9fa; 
+            padding: 1rem; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+        }
+        .health-plan-info { 
+            flex-grow: 1; 
+        }
+        .health-plan-label { 
+            font-size: 0.85rem; 
+            color: #777; 
+            margin-bottom: 0.2rem; 
+        }
+        .health-plan-name { 
+            font-size: 1.1rem; 
+            color: #333; 
+            font-weight: 600; 
+        }
+
+        /* Ajustes responsivos específicos */
+        @media (max-width: 768px) {
+            /* (Se precisar de mais ajustes responsivos, adicione aqui) */
+            .btn { 
+                padding: 0.6rem 1rem; 
+            }
+        } 
+
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <section class="welcome-section">
+        <h1 class="welcome-title">Olá, {{ user.usuario.nome }}</h1>
+        <p class="welcome-subtitle">Bem-vindo ao seu portal de saúde mental...</p>
+    </section>
+    
+    <div class="dashboard-grid">
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2 class="card-title">Próximas Consultas</h2>
+                </div>
+            <ul class="appointment-list">
+                {% for consulta in consultas_futuras %}
+                    <li class="appointment-item">
+                        <div class="appointment-info">
+                            <div class="appointment-date-time">
+                                {{ consulta.data|date:"d/m/Y" }} - {{ consulta.hora|time:"H:i" }}
+                                <span class="consulta-status-paciente status-{{ consulta.status }}">
+                                    {{ consulta.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="appointment-doctor-name">Com Dr(a). {{ consulta.psicologo.usuario.nome }}</div>
+                        </div>
+                        {% if consulta.status == 'confirmada' %}
+                            {% if not consulta.paciente_confirmou_presenca %}
+                                <form method="POST" action="{% url 'paciente:confirmar_presenca' consulta.id_consulta %}" style="margin-left: auto;"> 
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Confirmar Presença</button>
+                                </form>
+                            {% else %}
+                                <span style="margin-left: auto;text-align: center; font-size: 0.9rem; color: #155724; font-weight: bold;">✓ Presença Confirmada</span>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li style="text-align: center; color: #7f8c8d;">Nenhuma consulta futura agendada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2 class="card-title">Consultas Realizadas</h2>
+                 </div>
+            <ul class="appointment-list">
+                {% for consulta in consultas_realizadas %}
+                    <li class="appointment-item">
+                        <div class="appointment-info">
+                            <div class="appointment-date-time">{{ consulta.data|date:"d/m/Y" }} - {{ consulta.hora|time:"H:i" }}</div>
+                            <div class="appointment-doctor-name">Com Dr(a). {{ consulta.psicologo.usuario.nome }}</div>
+                        </div>
+                        <a href="{% url 'paciente:consulta_detalhes' consulta.id_consulta %}" class="appointment-link">Ver Detalhes</a> </li>
+                {% empty %}
+                    <li style="text-align: center; color: #7f8c8d;">Nenhuma consulta anterior realizada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2 class="card-title">Consultas Canceladas</h2>
+                </div>
+            <ul class="appointment-list">
+                
+                {% for consulta in consultas_canceladas %} 
+                    <li class="appointment-item">
+                        <div class="appointment-info">
+                            <div class="appointment-date-time">
+                                {{ consulta.data|date:"d/m/Y" }} - {{ consulta.hora|time:"H:i" }}
+                                <span class="consulta-status-paciente status-{{ consulta.status }}">
+                                    {{ consulta.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="appointment-doctor-name">Com Dr(a). {{ consulta.psicologo.usuario.nome }}</div>
+                        </div>
+                        </li>
+                {% empty %} <li style="text-align: center; color: #7f8c8d;">Nenhuma consulta cancelada recentemente.</li>
+                {% endfor %} </ul>
+        </div>
+
+    </div> <section class="cta-section">
+        <h2 class="cta-title">Precisa de uma nova consulta?</h2>
+        <p class="cta-description">Agende sua sessão e continue seu caminho para o bem-estar.</p>
+        <a href="{% url 'agendar_consulta' %}" class="btn-cta">Agendar Nova Consulta</a>
+    </section>
+    
+    <div class="dashboard-card" style="max-width: 400px; margin: 1rem auto;"> <div class="card-header">
+            <h2 class="card-title" style="text-align:left; margin:0;">Plano de Saúde</h2> </div>
+        <div class="health-plan">
+             <div class="health-plan-info">
+                <div class="health-plan-label">Seu plano atual</div>
+                <div class="health-plan-name">{{ paciente.plano_saude|default:"Não informado" }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/public/dashboard.js' %}"></script>
+    {% endblock %}

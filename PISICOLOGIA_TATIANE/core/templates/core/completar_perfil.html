@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+        .profile-form-container { max-width: 800px; margin: 4rem auto; position: relative; z-index:5; }
+        .profile-form-container form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; }
+        .profile-form-container h2 { grid-column: 1 / -1; color: #333; font-size: 1.5rem; border-bottom: 2px solid #8fbc8f; padding-bottom: 0.5rem; margin-top: 1.5rem; }
+        .profile-form-container .form-group { display: flex; flex-direction: column; margin-bottom: 0.5rem; }
+        .profile-form-container p { display: flex; flex-direction: column; margin-bottom: 0.5rem; }
+        .profile-form-container p label { display: none; }
+        .profile-form-container input { padding: 0.9rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 8px; width: 100%; box-sizing: border-box; }
+        .form-errors { font-size: 0.85rem; color: #d93025; list-style: none; padding: 0; margin: 5px 0 0 5px; }
+        .full-width { grid-column: 1 / -1; }
+        .btn-submit { grid-column: 2 / 3; padding: 1rem; font-size: 1.1rem; background-color: #283C2C; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 1.5rem; transition: background-color 0.3s ease; }
+        .btn-submit:hover { background-color: #3a523f; }
+        
+        /* --- ESTILOS PARA OS RADIO BUTTONS --- */
+        .profile-choice { grid-column: 1 / -1; display: flex; gap: 2rem; margin-bottom: 1rem; }
+        .choice-label {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .choice-label input { width: auto; margin-right: 0.75rem; }
+        .choice-label:has(input:checked) {
+            background-color: #e0f2f1;
+            border-color: #283C2C;
+            color: #283C2C;
+        }
+
+        @media (max-width: 600px) {
+            .profile-form-container form { grid-template-columns: 1fr; }
+            .full-width, .btn-submit { grid-column: 1 / -1; }
+            .profile-choice { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<div class="dashboard-container profile-form-container card">
+    <div class="dashboard-header">
+        <h1>Falta só mais um passo!</h1>
+        <p>Complete seu perfil para ter acesso ao painel.</p>
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+
+        <h2>1. Qual seu tipo de perfil?</h2>
+        <div class="profile-choice">
+            <label for="radio-paciente" class="choice-label">
+                <input type="radio" name="profile_type" value="paciente" id="radio-paciente" required>
+                Sou Paciente / Responsável
+            </label>
+            <label for="radio-psicologo" class="choice-label">
+                <input type="radio" name="profile_type" value="psicologo" id="radio-psicologo" required>
+                Sou Psicólogo(a)
+            </label>
+        </div>
+        
+        <h2>2. Dados Pessoais</h2>
+        <div class="form-group full-width">{{ usuario_form.nome }}{{ usuario_form.nome.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.cpf }}{{ usuario_form.cpf.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.idade }}{{ usuario_form.idade.errors|striptags }}</div>
+        <div class="form-group full-width">{{ usuario_form.rua }}{{ usuario_form.rua.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.numero }}{{ usuario_form.numero.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.bairro }}{{ usuario_form.bairro.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.cidade }}{{ usuario_form.cidade.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.cep }}{{ usuario_form.cep.errors|striptags }}</div>
+
+        <div id="paciente-fields" class="full-width" style="display: none; grid-column: 1 / -1;">
+            <h2>3. Dados do Paciente</h2>
+            <div class="form-group full-width">{{ paciente_form.responsavel }}{{ paciente_form.responsavel.errors|striptags }}</div>
+            <div class="form-group full-width">{{ paciente_form.plano_saude }}{{ paciente_form.plano_saude.errors|striptags }}</div>
+        </div>
+
+        <div id="psicologo-fields" class="full-width" style="display: none; grid-column: 1 / -1;">
+            <h2>3. Dados Profissionais</h2>
+            <div class="form-group full-width">{{ psicologo_form.crp }}{{ psicologo_form.crp.errors|striptags }}</div>
+            <div class="form-group full-width">{{ psicologo_form.especialidade }}{{ psicologo_form.especialidade.errors|striptags }}</div>
+        </div>
+        
+        {% if usuario_form.non_field_errors %}
+            <div class="full-width form-errors">{{ usuario_form.non_field_errors }}</div>
+        {% endif %}
+        
+        <button type="submit" class="btn-submit">Salvar Perfil e Continuar</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const radioPaciente = document.getElementById('radio-paciente');
+        const radioPsicologo = document.getElementById('radio-psicologo');
+        const pacienteFields = document.getElementById('paciente-fields');
+        const psicologoFields = document.getElementById('psicologo-fields');
+
+        /**
+         * Helper: Habilita ou desabilita todos os inputs dentro de um elemento.
+         * Campos desabilitados (disabled) não são validados nem enviados.
+         */
+        function setFieldsDisabled(element, isDisabled) {
+            const inputs = element.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = isDisabled;
+            });
+        }
+
+        function toggleForms() {
+            if (radioPaciente.checked) {
+                // Mostra e HABILITA os campos do paciente
+                pacienteFields.style.display = 'grid';
+                setFieldsDisabled(pacienteFields, false);
+
+                // Esconde e DESABILITA os campos do psicólogo
+                psicologoFields.style.display = 'none';
+                setFieldsDisabled(psicologoFields, true);
+
+            } else if (radioPsicologo.checked) {
+                // Esconde e DESABILITA os campos do paciente
+                pacienteFields.style.display = 'none';
+                setFieldsDisabled(pacienteFields, true);
+
+                // Mostra e HABILITA os campos do psicólogo
+                psicologoFields.style.display = 'grid';
+                setFieldsDisabled(psicologoFields, false);
+            }
+        }
+
+        radioPaciente.addEventListener('change', toggleForms);
+        radioPsicologo.addEventListener('change', toggleForms);
+
+        // Define o estado inicial no carregamento da página
+        const selectedType = '{{ selected_profile_type }}';
+        if (selectedType === 'psicologo') {
+            radioPsicologo.checked = true;
+        } else {
+            radioPaciente.checked = true;
+        }
+        
+        // Roda a função uma vez para definir o estado inicial correto
+        toggleForms();
+    });
+</script>
+
+{% endblock %}

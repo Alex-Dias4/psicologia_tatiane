@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}"> 
+    <style>
+        .editar-perfil-container { max-width: 800px; margin: 4rem auto; position: relative; z-index:5; }
+        .editar-perfil-container form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; }
+        .editar-perfil-container h2 { grid-column: 1 / -1; color: #333; font-size: 1.5rem; border-bottom: 2px solid #8fbc8f; padding-bottom: 0.5rem; margin-top: 1.5rem; }
+        .editar-perfil-container .form-group { display: flex; flex-direction: column; margin-bottom: 0.5rem; }
+        /* Remove o label padrão do ModelForm se você usa placeholders */
+        .editar-perfil-container label { display: none; } 
+         /* Ou estilize os labels se quiser mostrá-los */
+        /* .editar-perfil-container label { font-weight: 600; margin-bottom: 0.3rem; font-size: 0.9rem; color: #555;} */
+        
+        .editar-perfil-container input,
+        .editar-perfil-container textarea,
+        .editar-perfil-container select { 
+            padding: 0.9rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 8px; width: 100%; box-sizing: border-box; 
+        }
+        .form-errors { font-size: 0.85rem; color: #d93025; list-style: none; padding: 0; margin: 5px 0 0 5px; }
+        .full-width { grid-column: 1 / -1; }
+        .btn-submit { grid-column: 2 / 3; padding: 1rem; font-size: 1.1rem; background-color: #283C2C; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 1.5rem; transition: background-color 0.3s ease; }
+        .btn-submit:hover { background-color: #3a523f; }
+
+        @media (max-width: 600px) {
+            .editar-perfil-container form { grid-template-columns: 1fr; }
+            .full-width, .btn-submit { grid-column: 1 / -1; }
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<div class="dashboard-container editar-perfil-container dashboard-card">
+    <div class="dashboard-header">
+        <h1>Editar Perfil</h1>
+        <p>Atualize suas informações abaixo.</p>
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <h2>Dados Pessoais</h2>
+        <div class="form-group full-width">{{ usuario_form.nome }}{{ usuario_form.nome.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.cpf }}{{ usuario_form.cpf.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.idade }}{{ usuario_form.idade.errors|striptags }}</div>
+        <div class="form-group full-width">{{ usuario_form.rua }}{{ usuario_form.rua.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.numero }}{{ usuario_form.numero.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.bairro }}{{ usuario_form.bairro.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.cidade }}{{ usuario_form.cidade.errors|striptags }}</div>
+        <div class="form-group">{{ usuario_form.cep }}{{ usuario_form.cep.errors|striptags }}</div>
+        {% if psicologo_form %}
+            <div class="full-width" style="grid-column: 1 / -1;">
+                <h2>Dados Profissionais (Psicólogo)</h2>
+                <div class="form-group full-width">{{ psicologo_form.crp }}{{ psicologo_form.crp.errors|striptags }}</div>
+                <div class="form-group full-width">{{ psicologo_form.especialidade }}{{ psicologo_form.especialidade.errors|striptags }}</div>
+            </div>
+        {% elif paciente_form %}
+             <div class="full-width" style="grid-column: 1 / -1;">
+                <h2>Dados Adicionais (Paciente)</h2>
+                <div class="form-group full-width">{{ paciente_form.responsavel }}{{ paciente_form.responsavel.errors|striptags }}</div>
+                <div class="form-group full-width">{{ paciente_form.plano_saude }}{{ paciente_form.plano_saude.errors|striptags }}</div>
+            </div>
+        {% endif %}
+        
+        {% if usuario_form.non_field_errors %}
+            <div class="full-width form-errors">{{ usuario_form.non_field_errors }}</div>
+        {% endif %}
+        {% if paciente_form and paciente_form.non_field_errors %}
+             <div class="full-width form-errors">{{ paciente_form.non_field_errors }}</div>
+        {% endif %}
+        {% if psicologo_form and psicologo_form.non_field_errors %}
+             <div class="full-width form-errors">{{ psicologo_form.non_field_errors }}</div>
+        {% endif %}
+
+        <button type="submit" class="btn-submit">Salvar Alterações</button>
+    </form>
+</div>
+{% endblock %}

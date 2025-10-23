@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agendar Nova Consulta{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+        .agendamento-container { max-width: 600px; margin: 4rem auto; position: relative; z-index: 5; }
+        .agendamento-container form { display: flex; flex-direction: column; gap: 1rem; }
+        .agendamento-container .form-group { display: flex; flex-direction: column; }
+        .agendamento-container .form-group label { font-weight: 600; margin-bottom: 0.5rem; color: #333; }
+        .agendamento-container input,
+        .agendamento-container select,
+        .agendamento-container textarea {
+            padding: 0.9rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .btn-submit { padding: 1rem; font-size: 1.1rem; background-color: #283C2C; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 1.5rem; transition: background-color 0.3s ease; }
+        .btn-submit:hover { background-color: #3a523f; }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<div class="dashboard-container agendamento-container card">
+    <div class="dashboard-header">
+        <h1>Agendar Nova Consulta</h1>
+        <p>Preencha os dados abaixo para marcar sua consulta.</p>
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+
+        {% for field in form.visible_fields %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="form-errors">{{ field.errors|striptags }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+        
+        <button type="submit" class="btn-submit">Marcar Consulta</button>
+    </form>
+</div>
+{% endblock %}

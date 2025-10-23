@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<main class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Painel do Psicólogo</h1>
+        <p>Olá, Dr(a). {{ request.user.usuario.nome|default:'' }}. Gerencie seus pacientes e agenda.</p>
+    </div>
+
+    <div class="dashboard-grid">
+        
+        <div class="card">
+            <h2>Meu Perfil</h2>
+            
+            {% with user.usuario as usuario %}
+            {% with usuario.psicologo as psicologo %}
+            <ul class="info-list">
+                <li>
+                    <strong>Nome Completo:</strong>
+                    <span>{{ usuario.nome }}</span>
+                </li>
+                <li>
+                    <strong>Email:</strong>
+                    <span>{{ usuario.email }}</span>
+                </li>
+                <li>
+                    <strong>CRP:</strong>
+                    <span>{{ psicologo.crp }}</span>
+                </li>
+                <li>
+                    <strong>Especialidade:</strong>
+                    <span>{{ psicologo.especialidade }}</span>
+                </li>
+            </ul>
+            {% endwith %}
+            {% endwith %}
+
+            <h2 style="margin-top: 2rem;">Minhas Clínicas</h2>
+            <ul class="info-list">
+            {% for ps_clinica in request.user.usuario.psicologo.psicologoclinica_set.all %}
+                <li>
+                    <strong>{{ ps_clinica.clinica.nome }}</strong>
+                    <span>{{ ps_clinica.clinica.endereco }}, {{ ps_clinica.clinica.cidade }}</span>
+                </li>
+            {% empty %}
+                 <li>Você não está vinculado a nenhuma clínica.</li>
+            {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Minha Agenda</h2>
+
+            {% for consulta in request.user.usuario.psicologo.consulta_set.all %}
+                <div class="consulta-item">
+                    <div class="consulta-header">
+                        <span>
+                            Paciente: {{ consulta.id_paciente.usuario.nome }}
+                        </span>
+                        <span class="consulta-status {{ consulta.status|lower|default:'pendente' }}">
+                            {{ consulta.status|default:'Pendente' }}
+                        </span>
+                    </div>
+                    <div class="consulta-body">
+                        <p>
+                            <strong>Data:</strong> {{ consulta.data|date:"d/m/Y" }}
+                            às <strong>Hora:</strong> {{ consulta.hora|time:"H:i" }}
+                        </p>
+                        <a href="#" style="font-weight: bold; color: #283C2C;">Ver Prontuário</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Você ainda não possui nenhuma consulta marcada.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+</main>
+{% endblock %}

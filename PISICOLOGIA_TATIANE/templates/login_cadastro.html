@@ -1,0 +1,163 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br"> <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Cadastro</title>
+
+      <link rel="stylesheet" href="{% static 'css/public/SignUp_LogIn_Form.css' %}">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+ <body>
+
+  <div class="container">
+    <div class="form-box login">
+        <form method="POST" action="{% url 'account_view' %}">
+            {% csrf_token %}
+
+            {% if login_form.non_field_errors %}
+                <ul class="field-error-list" style="background: #f8d7da; padding: 10px; border-radius: 5px;">
+                {% for error in login_form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            <h1>Login</h1>
+            
+            <div class="input-box">
+                {{ login_form.username }}
+                <i class='bx bxs-user'></i>
+            </div>
+            {% if login_form.username.errors %}
+                <ul class="field-error-list">
+                {% for error in login_form.username.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            <div class="input-box">
+                {{ login_form.password }}
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+            {% if login_form.password.errors %}
+                <ul class="field-error-list">
+                {% for error in login_form.password.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            
+            <div class="forgot-link">
+                <a href="#">Esqueceu a senha?</a>
+            </div>
+            <button type="submit" class="btn" name="login_submit">Login</button>
+            </form>
+    </div>
+
+    <div class="form-box register">
+        <form method="POST" action="{% url 'account_view' %}">
+            {% csrf_token %}
+
+            {% if register_form.non_field_errors %}
+                <ul class="field-error-list" style="background: #f8d7da; padding: 10px; border-radius: 5px;">
+                {% for error in register_form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            <h1>Registration</h1>
+            
+            <div class="input-box">
+                {{ register_form.username }}
+                    <i class='bx bxs-user'></i>
+            </div>
+            {% if register_form.username.errors %}
+                <ul class="field-error-list">
+                    {% for error in register_form.username.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+                <div class="input-box">
+                    {{ register_form.email }}
+                    <i class='bx bxs-envelope' ></i>
+                </div>
+                {% if register_form.email.errors %}
+                    <ul class="field-error-list">
+                    {% for error in register_form.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="input-box">
+                    {{ register_form.password1 }}
+                    <i class='bx bxs-lock-alt' ></i>
+                </div>
+                {% if register_form.password1.errors %}
+                    <ul class="field-error-list">
+                    {% for error in register_form.password1.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="input-box">
+                    {{ register_form.password2 }}
+                    <i class='bx bxs-lock-alt' ></i>
+                </div>
+                {% if register_form.password2.errors %}
+                    <ul class="field-error-list">
+                    {% for error in register_form.password2.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                <button type="submit" class="btn" name="register_submit">Register</button>
+        </form>
+    </div>
+
+    <div class="toggle-box">
+      <div class="toggle-panel toggle-left">
+        <h1>Olá, Bem-vindo!</h1>
+        <p>Ainda não tem uma conta?</p>
+        <button class="btn register-btn">Cadastre-se</button>
+      </div>
+
+      <div class="toggle-panel toggle-right">
+        <h1>Bem-vindo de Volta!</h1>
+        <p>Já possui uma conta?</p>
+        <button class="btn login-btn">Login</button>
+      </div>
+    </div>
+  </div>
+
+       <script src="{% static 'js/public/SignUp_LogIn_Form.js' %}"></script>
+
+       <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Pega a "dica" da view. 
+                // Agora isso vai funcionar!
+                const activeForm = '{{ active_form }}'; 
+        
+                const container = document.querySelector('.container');
+                if (!container) return;
+        
+                // Se a view disse que o 'register' falhou, 
+                // força o painel de cadastro a ficar aberto
+                if (activeForm === 'register') {
+                    container.classList.add('active');
+                }
+            } catch (e) {
+                console.error("Erro ao tentar mostrar painel de erro:", e);
+            }
+        });
+    </script>
+ </body>
+</html>

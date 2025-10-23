@@ -1,0 +1,124 @@
+/* static/css/public/dashboard_shared.css */
+
+/* Container principal do Dashboard */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    position: relative; /* Mantém o z-index */
+    z-index: 5; 
+}
+
+/* Seção de Boas-Vindas */
+.welcome-section {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.welcome-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* Grid dos Cards */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Minmax ajustado */
+    gap: 1.5rem; /* Reduzido o gap */
+    margin-bottom: 2rem;
+}
+
+/* Card Individual do Dashboard */
+.dashboard-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex; 
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transição mais rápida */
+}
+.dashboard-card:hover {
+    transform: translateY(-4px); /* Efeito hover sutil */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem; /* Reduzido */
+    padding-bottom: 0.8rem; /* Adicionado padding */
+    border-bottom: 1px solid #eee; /* Linha separadora */
+}
+.card-title {
+    font-size: 1.2rem; /* Reduzido */
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0; /* Remove margens extras */
+    text-align: left; /* Alinha à esquerda por padrão */
+}
+.card-icon { /* Ícone opcional no header */
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    color: #fff; /* Cor do ícone SVG */
+}
+
+/* Lista genérica dentro dos cards */
+.appointment-list, .patient-list { /* Aplica a ambos */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; 
+}
+.appointment-item, .patient-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 0.2rem; /* Padding ajustado */
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem; /* Tamanho base */
+}
+.appointment-item:last-child, .patient-item:last-child {
+    border-bottom: none;
+}
+.appointment-info, .patient-info { /* Div que agrupa textos */
+    flex-grow: 1;
+    margin-right: 0.5rem; /* Espaço antes de botões/status */
+}
+
+/* Texto de "Nenhum item" */
+.empty-list-text {
+    text-align: center; 
+    color: #7f8c8d; 
+    font-size: 0.9rem;
+    padding: 1.5rem 0;
+}
+
+.cta-section{
+    text-align: center;
+    margin-top: 2rem;
+}
+
+
+/* Responsividade (compartilhada) */
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    .dashboard-container {
+        margin: 1rem auto;
+        padding: 0 0.8rem;
+    }
+    .welcome-title {
+        font-size: 1.8rem;
+    }
+}
