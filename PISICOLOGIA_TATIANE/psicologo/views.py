@@ -211,7 +211,7 @@ def meus_pacientes(request):
     ).select_related('usuario').order_by('usuario__nome') # select_related otimiza a busca do nome
 
     # Configura a paginação: 10 pacientes por página
-    paginator = Paginator(lista_pacientes, 10)
+    paginator = Paginator(lista_pacientes, 1)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
